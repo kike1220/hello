@@ -1,0 +1,18 @@
+.im{
+	background-color: #EEEEEE;
+	font-family: "Helvetica";
+}
+	
+ul{
+	list-style-type: circle;
+}
+.img{
+	display: block;
+	width: 160px;
+	height: 320 px; 
+}
+
+img{
+	width: 360px;
+	height: 640 px; 
+}
