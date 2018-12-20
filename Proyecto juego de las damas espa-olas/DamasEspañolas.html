@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "UTF-8">
+	<title>Juego de las damas españolas</title>
+	<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+	<script type="text/javascript">
+		var idActual;
+		var idAnterior;
+		var turnos = 0;
+		var mov = 0;
+		var numfila;
+		var columnaAnterior;
+		var columnaActual;
+		var numDiv;
+		var ficharoja;
+		var fichagris;
+		var puntuajeRojas = 0;
+		var puntuajeGrises = 0;
+		var dama ;var dama2;
+
+		/*Funcion para mostrar el score*/
+		function score(){
+			var rojas = document.getElementById("Scorerojo");
+			var grises = document.getElementById("Scoregris");
+			rojas.removeChild(rojas.firstChild);
+			grises.removeChild(grises.firstChild);
+			rojas.innerHTML = "<p>"+puntuajeRojas+"</p>";
+			grises.innerHTML = "<p>"+puntuajeGrises+"</p>";
+		}
+
+		/*funcion para el puntuaje de cada jugador*/
+		function puntuaje(){
+			if((puntuajeGrises < 12)  && (puntuajeRojas < 12)){
+				if(turnos == 0){
+					puntuajeRojas += 1;
+					turnos = 1;
+				}else{
+					puntuajeGrises +=1;
+					turnos = 0;
+				}
+			}
+			if(puntuajeGrises == 12){
+				alert("Han ganado las fichas grises");
+				turnos = 2;
+				mov = 2;
+			}
+			else{
+				if(puntuajeRojas == 12){
+					alert("Han ganado las fichas rojas");
+				}
+				turnos = 2;
+				mov = 2;
+			}
+		}
+
+		/*funcion para la ficha de la dama roja*/
+		function damaRoja(imagen,divAnterior,columnaActual){
+			if(columnaActual == 8){
+				imagen.src = "RR.png";
+				dama = imagen.src;				
+			}
+			else{
+				imagen.src = divAnterior.firstChild.src;
+			}
+		}
+
+		/*funcion para la ficha de la dama gris*/
+		function damaGris(imagen,divAnterior,columnaActual){
+			if(columnaActual == 1){
+				imagen.src = "RG.png";
+				dama2 = imagen.src;
+			}
+			else{
+				imagen.src = divAnterior.firstChild.src;
+			}
+		}
+
+		/*funcion para determinar el turno de cada jugador*/
+		function turno(){
+			if(turnos == 0){
+				turnos = 1;
+			}
+			else{
+				turnos = 0;
+			}
+		}
+
+		/*funcion para la validacion de movimientos permitidos*/
+		function mover(id){
+			var divActual = document.getElementById(id);
+			if(mov == 0 ){
+				idAnterior = id;
+				mov = 1;
+			}
+			else{
+				var divAnterior = document.getElementById(idAnterior);
+				idAnterior = divAnterior.parentNode.id; idAnterior = + idAnterior;
+				idActual = divActual.parentNode.id; idActual = + idActual;
+				numfila = idActual - idAnterior;
+				columnaActual = divActual.id; columnaActual = columnaActual.charAt(1); 
+				columnaActual = + columnaActual;
+				columnaAnterior = divAnterior.id; columnaAnterior = columnaAnterior.charAt(1);
+				columnaAnterior = + columnaAnterior;
+				if((divAnterior.firstChild.src == fichagris) || (divAnterior.firstChild.src == ficharoja)){
+					if((numfila == 1 || numfila == -1) && turnos == 0){
+						if((columnaAnterior<columnaActual) && (divActual.firstChild == null)){
+							var imagen = document.createElement("img");
+							damaRoja(imagen,divAnterior,columnaActual);
+							imagen.className = "imagen";
+							divAnterior.removeChild(divAnterior.firstChild);
+							if(divActual.firstChild == null){
+								divActual.appendChild(imagen);
+							}
+							turno();
+						}
+					}
+					else{
+						if((numfila == 1 || numfila == -1) && turnos == 1){
+							if((columnaAnterior>columnaActual) && (divActual.firstChild == null)){
+								var imagen = document.createElement("img");
+								damaGris(imagen,divAnterior,columnaActual);
+								imagen.className = "imagen";
+								divAnterior.removeChild(divAnterior.firstChild);
+								if(divActual.firstChild == null){
+									divActual.appendChild(imagen);
+								}		
+								turno();
+							}
+						}
+						else{
+							if(numfila == 2){
+								var columnaIntermedio = ""+(columnaAnterior+1);
+								var idIntermedio = ""+(idAnterior+1) + columnaIntermedio;
+								var divIntermedio = document.getElementById(idIntermedio);							
+							}
+							else{
+								var columnaIntermedio = ""+(columnaAnterior+1);
+								var idIntermedio = ""+(idAnterior-1) + columnaIntermedio;
+								var divIntermedio = document.getElementById(idIntermedio);
+							}
+							if((numfila == 2 || numfila == -2) && turnos == 0){
+								if((columnaAnterior<columnaActual) && (divActual.firstChild == null)){
+									if(divIntermedio.firstChild != null){
+										if(divIntermedio.firstChild.src != ficharoja){
+											var imagen = document.createElement("img");
+											damaRoja(imagen,divAnterior,columnaActual);
+											imagen.className = "imagen";
+											divAnterior.removeChild(divAnterior.firstChild);
+											divIntermedio.removeChild(divIntermedio.firstChild);
+											divActual.appendChild(imagen);
+											puntuaje();
+											score();	
+											turno();
+										}
+									}
+
+								}
+							}
+							else{
+								if(numfila == 2){
+									var columnaIntermedio = ""+(columnaAnterior-1);
+									var idIntermedio = ""+(idAnterior+1) + columnaIntermedio;
+									var divIntermedio = document.getElementById(idIntermedio);							
+								}
+								else{
+									var columnaIntermedio = ""+(columnaAnterior-1);
+									var idIntermedio = ""+(idAnterior-1) + columnaIntermedio;
+									var divIntermedio = document.getElementById(idIntermedio);
+								}
+								if((numfila == 2 || numfila == -2) && turnos == 1){
+									if((columnaAnterior>columnaActual) && (divActual.firstChild == null)){
+										if(divIntermedio.firstChild != null){
+											if(divIntermedio.firstChild.src != fichagris){
+												var imagen = document.createElement("img");
+												damaGris(imagen,divAnterior,columnaActual);
+												imagen.className = "imagen";
+												divAnterior.removeChild(divAnterior.firstChild);
+												divIntermedio.removeChild(divIntermedio.firstChild);
+												divActual.appendChild(imagen);
+												puntuaje();
+												score();
+												turno();
+											}
+										}									
+									}
+								}							
+							}
+						}
+					}
+				}
+				else{
+					if((divAnterior.firstChild.src == dama) || (divAnterior.firstChild.src == dama2) ){
+						if((numfila == 1 || numfila == -1) && turnos == 0 && (divAnterior.firstChild.src == dama)){
+							if ((divActual.firstChild == null)){
+								var imagen = document.createElement("img");
+								damaRoja(imagen,divAnterior,columnaActual);
+								imagen.className = "imagen";
+								divAnterior.removeChild(divAnterior.firstChild);
+								if(divActual.firstChild == null){
+									divActual.appendChild(imagen);
+								}
+								turno();
+							}
+						}
+						else{
+							if((numfila == 1 || numfila == -1) && turnos == 1 && (divAnterior.firstChild.src == dama2)){
+								if ((divActual.firstChild == null)){
+									var imagen = document.createElement("img");
+									damaRoja(imagen,divAnterior,columnaActual);
+									imagen.className = "imagen";
+									divAnterior.removeChild(divAnterior.firstChild);
+									if(divActual.firstChild == null){
+										divActual.appendChild(imagen);
+									}
+									turno();
+								}
+							}
+							else{
+								if(numfila == 2){
+									if(columnaActual>columnaAnterior){
+										var columnaIntermedio = ""+(columnaAnterior+1);
+										var idIntermedio = ""+(idAnterior+1) + columnaIntermedio;
+										var divIntermedio = document.getElementById(idIntermedio);
+									}
+									else{
+										var columnaIntermedio = ""+(columnaAnterior-1);
+										var idIntermedio = ""+(idAnterior+1) + columnaIntermedio;
+										var divIntermedio = document.getElementById(idIntermedio);
+									}							
+								}
+								else{
+									if(columnaActual>columnaAnterior){
+										var columnaIntermedio = ""+(columnaAnterior+1);
+										var idIntermedio = ""+(idAnterior-1) + columnaIntermedio;
+										var divIntermedio = document.getElementById(idIntermedio);
+									}
+									else{
+										var columnaIntermedio = ""+(columnaAnterior-1);
+										var idIntermedio = ""+(idAnterior-1) + columnaIntermedio;
+										var divIntermedio = document.getElementById(idIntermedio);
+									}
+								}
+								if((numfila == 2 || numfila == -2) && turnos == 0 && (divAnterior.firstChild.src == dama)){
+									if((divActual.firstChild == null)){
+										if(divIntermedio.firstChild != null){
+											if(divIntermedio.firstChild.src != ficharoja){
+												var imagen = document.createElement("img");
+												damaRoja(imagen,divAnterior,columnaActual);
+												imagen.className = "imagen";
+												divAnterior.removeChild(divAnterior.firstChild);
+												divIntermedio.removeChild(divIntermedio.firstChild);
+												divActual.appendChild(imagen);
+												puntuaje();
+												score();	
+												turno();
+											}
+										}
+
+									}
+								}
+								else{
+									if(numfila == 2){
+										if(columnaActual>columnaAnterior){
+											var columnaIntermedio = ""+(columnaAnterior+1);
+											var idIntermedio = ""+(idAnterior+1) + columnaIntermedio;
+											var divIntermedio = document.getElementById(idIntermedio);
+										}
+										else{
+											var columnaIntermedio = ""+(columnaAnterior-1);
+											var idIntermedio = ""+(idAnterior+1) + columnaIntermedio;
+											var divIntermedio = document.getElementById(idIntermedio);
+										}							
+									}
+									else{
+										if(columnaActual>columnaAnterior){
+											var columnaIntermedio = ""+(columnaAnterior+1);
+											var idIntermedio = ""+(idAnterior-1) + columnaIntermedio;
+											var divIntermedio = document.getElementById(idIntermedio);
+										}
+										else{
+											var columnaIntermedio = ""+(columnaAnterior-1);
+											var idIntermedio = ""+(idAnterior-1) + columnaIntermedio;
+											var divIntermedio = document.getElementById(idIntermedio);
+										}
+									}
+									if((numfila == 2 || numfila == -2) && turnos == 1 && (divAnterior.firstChild.src == dama2)){
+										if((divActual.firstChild == null)){
+											if(divIntermedio.firstChild != null){
+												if(divIntermedio.firstChild.src != fichagris){
+													var imagen = document.createElement("img");
+													damaGris(imagen,divAnterior,columnaActual);
+													imagen.className = "imagen";
+													divAnterior.removeChild(divAnterior.firstChild);
+													divIntermedio.removeChild(divIntermedio.firstChild);
+													divActual.appendChild(imagen);
+													puntuaje();
+													score();
+													turno();
+												}
+											}									
+										}
+									}							
+								}
+							}
+						}
+					}
+				}
+				mov = 0;
+			}
+		}
+
+		/*funcion para las casillas blancas para que no acceda a ellas*/
+		function mover2(){
+			if(mov == 1){mov = 0;}
+			else{mov = 1;}
+		}
+
+		/*Funcion para escoger que tipo de movimiento se debe hacer conforme si selecciono una ficha normal o la ficha de la dama*/
+		 function tipoMovimiento(id){
+		 	var div1 = document.getElementById(id);
+		 	if(div1.firstChild != null){
+		 		if((div1.firstChild.src == fichagris) || (div1.firstChild.src == ficharoja)){
+		 			mover(id);
+		 		}
+		 	}
+		 }
+
+		/*funcion para crear el tablero del juego*/
+		function crearTablero(){
+			var numeroFila;
+			var numeroColumna;
+			var tablero = document.createElement("div");
+			tablero.className = "tablero";
+			tablero.id = "table";
+			document.body.appendChild(tablero);
+			for(var i=0; i<8 ;i++){
+				var fila = document.createElement("div");
+				fila.className = "filas";
+				numeroFila = i + 1;
+				fila.id = ""+numeroFila;
+				for(var j=0;j<8;j++){
+					numeroColumna = j + 1;
+					if(i%2 == 0){
+						if(j%2 == 0){
+							var casilla = document.createElement("div");
+							casilla.className = "casillaWhite";
+							casilla.id = ""+numeroFila+numeroColumna;
+							casilla.setAttribute("onclick","mover2();");
+							fila.appendChild(casilla);
+						}
+						else{
+							var casilla = document.createElement("div");
+							casilla.className = "casillaBlack";
+							casilla.id = ""+numeroFila+numeroColumna;
+							casilla.setAttribute("onclick","mover(id);");
+							if(j<3){
+								var imagen = document.createElement("img");
+								imagen.src = "ficharoja.png";
+								ficharoja = imagen.src;
+								imagen.className = "imagen";
+								casilla.appendChild(imagen);
+							}
+							else{
+								if(j>4){
+									var imagen = document.createElement("img");
+									imagen.src = "fichagris.png";
+									fichagris = imagen.src;
+									imagen.className = "imagen";
+									casilla.appendChild(imagen);		
+								}
+							}
+							fila.appendChild(casilla);
+						}
+					}
+					else{
+						if(j%2 == 0){
+							var casilla = document.createElement("div");
+							casilla.className = "casillaBlack";
+							casilla.id = ""+numeroFila+numeroColumna;
+							casilla.setAttribute("onclick","mover(id);");
+							if(j<3){
+								var imagen = document.createElement("img");
+								imagen.src = "ficharoja.png";
+								imagen.className = "imagen";
+								casilla.appendChild(imagen);
+							}
+							else{
+								if(j>4){
+									var imagen = document.createElement("img");
+									imagen.src = "fichagris.png";
+									imagen.className = "imagen";
+									casilla.appendChild(imagen);		
+								}
+							}
+							fila.appendChild(casilla);
+						}
+						else{
+							var casilla = document.createElement("div");
+							casilla.className = "casillaWhite";
+							casilla.id = ""+numeroFila+numeroColumna;
+							casilla.setAttribute("onclick","mover2();");
+							fila.appendChild(casilla);	
+						}	
+					}
+				}
+				tablero.appendChild(fila);
+			}
+		}
+
+		/*Funcion para el score*/
+		function crearScore(){
+			var ScoreGris;
+			var ScoreRojo = document.createElement("div");
+			ScoreRojo.className = "scoreRojo";
+			ScoreRojo.id = "Scorerojo";
+			document.body.appendChild(ScoreRojo);
+			ScoreGris = document.createElement("div");
+			ScoreGris.className = "scoreGris";
+			ScoreGris.id = "Scoregris";
+			document.body.appendChild(ScoreGris);
+			ScoreRojo.innerHTML = "<p>"+puntuajeRojas+"</p>";
+			ScoreGris.innerHTML = "<p>"+puntuajeGrises+"</p>";
+		}
+
+		crearTablero();
+		crearScore();
+		
+		
+
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.tablero{
+	background-color: #71706F;
+	border: 20px solid #71706F;
+	height: 800px;
+	width: 800px;
+	display: flex;
+	margin: 0 auto;
+}
+p{
+	font-size: 90px;
+	font-family: italic;
+	text-align: center;
+}
+.filas{
+	width: 800px;
+}
+.casillaWhite{
+	background-color: white;
+	height: 100px;
+	width: 100px;
+}
+.casillaBlack{
+	background-color: black;
+	height: 100px;
+	width: 100px;
+}
+.imagen{
+	height: 100px;
+	width: 100px;	
+}
+.scoreRojo{
+	background-color: red;
+	border: 1px solid #71706F;
+	height : 100px;
+	width: 200px;
+	display: block;
+	float: left;
+}
+.scoreGris{
+	background-color: gray;
+	border: 1px solid #71706F;
+	height : 100px;
+	width: 200px;
+	display: block;
+	float: right;
+}
